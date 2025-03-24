@@ -76,7 +76,7 @@ Create a service account by following [this guide](https://clearblade.atlassian.
 
 Install & run the latest binary from https://github.com/ClearBlade/clearblade-iot-enterprise-migration/releases.
 
-`clearblade-iot-enterprise-migration -cbServiceAccount <JSON_FILE_PATH> -cbRegistryName <CB_IOT_CORE_REGISTRY> -cbRegistryRegion <CB_PROJECT_REGION> -gcpServiceAccount <JSON_FILE_PATH>`
+`clearblade-iot-enterprise-migration -cbServiceAccount <JSON_FILE_PATH> -cbRegistryName <CB_IOT_CORE_REGISTRY> -cbRegistryRegion <CB_PROJECT_REGION> -cbServiceAccount <JSON_FILE_PATH>`
 
 You will be prompted to enter a device's CSV file path that will be used to migrate devices specified in the CSV file. You can skip this step by pressing enter; by default, all the registry's devices will be migrated. Alternatively, you can set the `--silentMode` flag to run the tool in non-interactive mode.
 
