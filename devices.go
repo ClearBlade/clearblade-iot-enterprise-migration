@@ -254,34 +254,34 @@ func migrateDevice(resultC chan ErrorLog, device *cbiotcore.Device) {
 		if err != nil {
 			return
 		}
+	}
 
-		//Should roles and permissions be created?
-		if Args.createDeviceRole {
-			role, err := createRoleForDevice(resultC, device)
-			if err != nil {
-				return
-			}
+	//Should roles and permissions be created?
+	if Args.createDeviceRole {
+		role, err := createRoleForDevice(resultC, device)
+		if err != nil {
+			return
+		}
 
-			var roleId string
-			val, ok := role["role_id"]
+		var roleId string
+		val, ok := role["role_id"]
+		if ok {
+			roleId = val.(string)
+		} else {
+			val, ok := role["ID"]
 			if ok {
 				roleId = val.(string)
-			} else {
-				val, ok := role["ID"]
-				if ok {
-					roleId = val.(string)
-				}
 			}
+		}
 
-			err = addTopicsToRole(resultC, device, roleId)
-			if err != nil {
-				return
-			}
+		err = addTopicsToRole(resultC, device, roleId)
+		if err != nil {
+			return
+		}
 
-			err = addDeviceToRole(resultC, device)
-			if err != nil {
-				return
-			}
+		err = addDeviceToRole(resultC, device)
+		if err != nil {
+			return
 		}
 	}
 
@@ -296,21 +296,20 @@ func createOrUpdateDevice(resultC chan ErrorLog, device *cbiotcore.Device) error
 
 	if err != nil {
 		// Checking if device exists - status code 409
-		if !strings.Contains(err.Error(), "already exists in system") {
+		if strings.Contains(err.Error(), "already exists in system") {
+			// If Device exists, patch it
+			_, err = updateDevice(device)
+			if err != nil {
+				resultC <- ErrorLog{
+					DeviceId: device.Id,
+					Context:  "Error when Patching Device",
+					Error:    err,
+				}
+			}
+		} else {
 			resultC <- ErrorLog{
 				DeviceId: device.Id,
 				Context:  "Error when Creating Device",
-				Error:    err,
-			}
-		}
-
-		// If Device exists, patch it
-		_, err = updateDevice(device)
-
-		if err != nil {
-			resultC <- ErrorLog{
-				DeviceId: device.Id,
-				Context:  "Error when Patching Device",
 				Error:    err,
 			}
 		}

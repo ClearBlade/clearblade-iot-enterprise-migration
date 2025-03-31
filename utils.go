@@ -159,9 +159,40 @@ func transform(device *cbiotcore.Device, deviceType string, csvFile string) map[
 	cbDevice := map[string]interface{}{
 		"name":                   device.Id,
 		"enabled":                !device.Blocked,
+		"id":                     device.Id,
+		"numId":                  device.NumId,
+		"metadata":               device.Metadata,
+		"blocked":                device.Blocked,
+		"config":                 device.Config,
+		"last_error_status":      device.LastErrorStatus,
+		"log_level":              device.LogLevel,
 		"type":                   deviceType,
 		"allow_key_auth":         false,
 		"allow_certificate_auth": true,
+	}
+
+	if device.GatewayConfig.GatewayType == "GATEWAY" {
+		cbDevice["is_device_proxy"] = true
+		cbDevice["proxy_authentication_method"] = "association_only"
+	}
+
+	if device.LastHeartbeatTime != "" {
+		cbDevice["last_heart_beat_time"] = device.LastHeartbeatTime
+	}
+	if device.LastEventTime != "" {
+		cbDevice["last_event_time"] = device.LastEventTime
+	}
+	if device.LastStateTime != "" {
+		cbDevice["last_state_time"] = device.LastStateTime
+	}
+	if device.LastConfigAckTime != "" {
+		cbDevice["last_config_ack_time"] = device.LastConfigAckTime
+	}
+	if device.LastConfigSendTime != "" {
+		cbDevice["last_config_send_time"] = device.LastConfigSendTime
+	}
+	if device.LastErrorTime != "" {
+		cbDevice["last_error_time"] = device.LastErrorTime
 	}
 
 	if csvFile != "" {

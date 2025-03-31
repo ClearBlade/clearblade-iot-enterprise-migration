@@ -75,7 +75,7 @@ func initMigrationFlags() {
 	flag.IntVar(&Args.pageSize, "pageSize", 100, "Page Size")
 	flag.BoolVar(&Args.updatePublicKeys, "updatePublicKeys", true, "Replace existing keys of migrated devices. Default is true")
 	flag.BoolVar(&Args.silentMode, "silentMode", false, "Run this tool in silent (non-interactive) mode. Default is false")
-	flag.BoolVar(&Args.createDeviceRole, "createDeviceRole", false, "Should the device roles and permissions be created")
+	flag.BoolVar(&Args.createDeviceRole, "createDeviceRole", true, "Should the device roles and permissions be created")
 }
 
 func main() {
