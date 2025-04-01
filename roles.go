@@ -16,6 +16,7 @@ var pubTopics = [2]string{"/devices/" + topicToken + "/events/#", "/devices/" + 
 func createRoleForDevice(resultC chan ErrorLog, device *cbiotcore.Device) (map[string]interface{}, error) {
 	role, err := cbDevClient.CreateRole(Args.cbSystemKey, device.Id)
 	if err != nil {
+		fmt.Println(err)
 		// Checking if role exists
 		if !strings.Contains(err.Error(), "A role's name must be unique") {
 			resultC <- ErrorLog{
