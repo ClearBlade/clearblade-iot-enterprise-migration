@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"strings"
 
 	cb "github.com/clearblade/Go-SDK"
@@ -34,7 +35,19 @@ func createRoleForDevice(resultC chan ErrorLog, device *cbiotcore.Device) (map[s
 			}
 		}
 	}
-	return role.(map[string]interface{}), err
+	if role == nil {
+		resultC <- ErrorLog{
+			DeviceId: device.Id,
+			Context:  "Error when Creating role",
+			Error:    err,
+		}
+		return nil, err
+	}
+	roleMap, ok := role.(map[string]interface{})
+	if !ok {
+		return nil, fmt.Errorf("unexpected type: expected map[string]interface{}, got %T", role)
+	}
+	return roleMap, err
 }
 
 func addTopicsToRole(resultC chan ErrorLog, device *cbiotcore.Device, roleId string) error {
